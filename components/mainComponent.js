@@ -22,7 +22,12 @@ class Main extends Component{
             },
             style: {
                 backgroundColor: '#006156',
-            }
+                alignContent: 'center',
+                justifyContent: 'center',
+            },
+            labelStyle: {
+                fontWeight: 'bold'
+            },
         };
         return(
             <Tab.Navigator tabBarOptions={tabBarOptions} >
