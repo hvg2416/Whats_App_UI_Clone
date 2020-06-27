@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 import Main from './mainComponent';
-import { StyleSheet } from 'react-native';
-import Constants from "expo-constants";
 
 const Stack = createStackNavigator();
 

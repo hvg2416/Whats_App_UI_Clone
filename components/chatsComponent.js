@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableOpacity, TouchableNativeFeedback } from 'react-native';
+import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground } from 'react-native';
+import { createStackNavigator } from '@react-navigation/stack';
 
 
-function renderItem(item) {
+const Stack = createStackNavigator();
+
+function renderItem(item, navigation) {
     return (
-        <TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.navigate('ChatDetails')} >
             <View style={styles.chatListItem}>
                 <View style={styles.chatListItem_ImageView}>
                     <Image source={{ uri: item.chat_thumbnail }} style={styles.chatListItem_Image} />
@@ -23,12 +26,12 @@ function renderItem(item) {
     );
 }
 
-function ChatList({ data }) {
+function ChatList(props) {
 
     return (
         <FlatList
-            data={data}
-            renderItem={({ item }) => renderItem(item)}
+            data={props.data}
+            renderItem={({ item }) => renderItem(item, props.navigation)}
             keyExtractor={(item) => {
                 let key = new Number(item.chat_id);
                 return key.toString();
@@ -66,7 +69,9 @@ class Chats extends Component {
     render() {
 
         if (this.state.done) {
-            return <ChatList data={this.state.data} />
+            return (
+                <ChatList data={this.state.data} navigation={this.props.navigation} />
+            );
         }
         else {
             return (
@@ -75,6 +80,27 @@ class Chats extends Component {
         }
     }
 }
+
+function ChatDetails() {
+
+    return(
+        <ImageBackground source={{uri: 'https://i.redd.it/qwd83nc4xxf41.jpg'}} style={styles.chatDetailsScreenBackgroundImage} >
+        </ImageBackground>
+    );
+}
+
+class RootChatList extends Component {
+
+    render() {
+
+        return(
+            <Stack.Navigator>
+                <Stack.Screen name='ChatList' component={Chats} />
+                <Stack.Screen name='ChatDetails' component={ChatDetails} />
+            </Stack.Navigator>
+        );
+    }
+} 
 
 const styles = StyleSheet.create({
     chatListItem: {
@@ -121,6 +147,10 @@ const styles = StyleSheet.create({
         marginLeft: "22%",
         marginRight: 10
     },
+    chatDetailsScreenBackgroundImage: {
+        height: "100%",
+        width: "100%"
+    },
 });
 
-export default Chats;
+export default RootChatList;
