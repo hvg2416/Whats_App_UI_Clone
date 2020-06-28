@@ -1,45 +1,9 @@
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground } from 'react-native';
+import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
 const Stack = createStackNavigator();
-
-function renderItem(item, navigation) {
-    return (
-        <TouchableNativeFeedback onPress={() => navigation.navigate('ChatDetails')} >
-            <View style={styles.chatListItem}>
-                <View style={styles.chatListItem_ImageView}>
-                    <Image source={{ uri: item.chat_thumbnail }} style={styles.chatListItem_Image} />
-                </View>
-                <View style={styles.chatListItem_MessageView}>
-                    <View style={styles.chatListItem_MessageView_ChatName_LastMessageTime}>
-                        <Text style={styles.chatListItem_MessageView_ChatName_Text}> {item.chat_name} </Text>
-                        <Text style={styles.chatListItem_MessageView_LastMessageTime_Text}> {item.chat_recentChats[0].timestamp} </Text>
-                    </View>
-                    <View style={styles.chatListItem_MessageView_LastMessage_MessagesBadge}>
-                        <Text style={styles.chatListItem_MessageView_LastMessage_Text}> {item.chat_recentChats[0].message} </Text>
-                    </View>
-                </View>
-            </View>
-        </TouchableNativeFeedback>
-    );
-}
-
-function ChatList(props) {
-
-    return (
-        <FlatList
-            data={props.data}
-            renderItem={({ item }) => renderItem(item, props.navigation)}
-            keyExtractor={(item) => {
-                let key = new Number(item.chat_id);
-                return key.toString();
-            }}
-            ItemSeparatorComponent={() => <View style={styles.ItemSeparatorComponent}></View>}
-        />
-    );
-}
 
 class Chats extends Component {
 
@@ -47,8 +11,47 @@ class Chats extends Component {
         super(props);
         this.state = {
             data: [],
-            done: false
+            done: false,
+            toggleModal: false
         };
+        this.ChatList = this.ChatList.bind(this);
+        this.renderItem = this.renderItem.bind(this);
+    }
+
+    ChatList(data) {
+
+        return (
+            <FlatList
+                data={data}
+                renderItem={({ item }) => this.renderItem(item)}
+                keyExtractor={(item) => {
+                    let key = new Number(item.chat_id);
+                    return key.toString();
+                }}
+                ItemSeparatorComponent={() => <View style={styles.ItemSeparatorComponent}></View>}
+            />
+        );
+    }
+
+    renderItem(item) {
+        return (
+            <TouchableNativeFeedback onPress={() => { this.setState({toggleModal: !this.state.toggleModal}) } } >
+                <View style={styles.chatListItem}>
+                    <View style={styles.chatListItem_ImageView}>
+                        <Image source={{ uri: item.chat_thumbnail }} style={styles.chatListItem_Image} />
+                    </View>
+                    <View style={styles.chatListItem_MessageView}>
+                        <View style={styles.chatListItem_MessageView_ChatName_LastMessageTime}>
+                            <Text style={styles.chatListItem_MessageView_ChatName_Text}> {item.chat_name} </Text>
+                            <Text style={styles.chatListItem_MessageView_LastMessageTime_Text}> {item.chat_recentChats[0].timestamp} </Text>
+                        </View>
+                        <View style={styles.chatListItem_MessageView_LastMessage_MessagesBadge}>
+                            <Text style={styles.chatListItem_MessageView_LastMessage_Text}> {item.chat_recentChats[0].message} </Text>
+                        </View>
+                    </View>
+                </View>
+            </TouchableNativeFeedback>
+        );
     }
 
     componentDidMount() {
@@ -70,7 +73,26 @@ class Chats extends Component {
 
         if (this.state.done) {
             return (
-                <ChatList data={this.state.data} navigation={this.props.navigation} />
+                <>
+                    {this.ChatList(this.state.data)}
+                    <Modal
+                        animationType='slide'
+                        transparent={true}
+                        visible={this.state.toggleModal}
+                        onRequestClose={() => {this.setState({toggleModal: !this.state.toggleModal})}}
+                    >
+                        <View style={styles.chatDetailsScreenActionBar}>
+                            <TouchableNativeFeedback style={styles.chatDetailsScreenBackButtonView}>
+                                <View style={styles.chatDetailsScreenBackButton}>
+
+                                </View>
+                            </TouchableNativeFeedback>
+                        </View>
+                        <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage} >
+
+                        </ImageBackground>
+                    </Modal>
+                </>
             );
         }
         else {
@@ -80,27 +102,6 @@ class Chats extends Component {
         }
     }
 }
-
-function ChatDetails() {
-
-    return(
-        <ImageBackground source={{uri: 'https://i.redd.it/qwd83nc4xxf41.jpg'}} style={styles.chatDetailsScreenBackgroundImage} >
-        </ImageBackground>
-    );
-}
-
-class RootChatList extends Component {
-
-    render() {
-
-        return(
-            <Stack.Navigator>
-                <Stack.Screen name='ChatList' component={Chats} />
-                <Stack.Screen name='ChatDetails' component={ChatDetails} />
-            </Stack.Navigator>
-        );
-    }
-} 
 
 const styles = StyleSheet.create({
     chatListItem: {
@@ -151,6 +152,22 @@ const styles = StyleSheet.create({
         height: "100%",
         width: "100%"
     },
+    chatDetailsScreenActionBar: {
+        height: 50,
+        backgroundColor: '#006156',
+        justifyContent:'center'
+    },
+    chatDetailsScreenBackButtonView: {
+        height: 40,
+        width: 20,
+        borderRadius: 24
+    },
+    chatDetailsScreenBackButton: {
+        backgroundColor: 'pink',
+        height: 40,
+        width: 70,
+        borderRadius: 24
+    },
 });
 
-export default RootChatList;
+export default Chats;
