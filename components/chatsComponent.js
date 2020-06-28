@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal } from 'react-native';
+import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { MaterialIcons } from '@expo/vector-icons';
 
 
 const Stack = createStackNavigator();
@@ -12,10 +13,12 @@ class Chats extends Component {
         this.state = {
             data: [],
             done: false,
-            toggleModal: false
+            toggleModal: false,
+            selectedChat: {},
         };
         this.ChatList = this.ChatList.bind(this);
         this.renderItem = this.renderItem.bind(this);
+        this.renderModal = this.renderModal.bind(this);
     }
 
     ChatList(data) {
@@ -35,7 +38,7 @@ class Chats extends Component {
 
     renderItem(item) {
         return (
-            <TouchableNativeFeedback onPress={() => { this.setState({toggleModal: !this.state.toggleModal}) } } >
+            <TouchableNativeFeedback onPress={() => { this.setState({ toggleModal: !this.state.toggleModal, selectedChat: item }) }} >
                 <View style={styles.chatListItem}>
                     <View style={styles.chatListItem_ImageView}>
                         <Image source={{ uri: item.chat_thumbnail }} style={styles.chatListItem_Image} />
@@ -51,6 +54,31 @@ class Chats extends Component {
                     </View>
                 </View>
             </TouchableNativeFeedback>
+        );
+    }
+
+    renderModal() {
+        return (
+            <Modal
+                animationType='slide'
+                transparent={true}
+                visible={this.state.toggleModal}
+                onRequestClose={() => { this.setState({ toggleModal: !this.state.toggleModal }) }}
+            >
+                <View style={styles.chatDetailsScreenActionBar}>
+                    <View style={styles.chatDetailsScreenBackButtonView}>
+                        <TouchableNativeFeedback>
+                            <View style={styles.chatDetailsScreenBackButton}>
+                                <MaterialIcons name="arrow-back" size={30} color="white" />
+                                <Image source={{ uri: this.state.selectedChat.chat_thumbnail }} style={styles.chatDetailsScreenBackButtonImage} />
+                            </View>
+                        </TouchableNativeFeedback>
+                    </View>
+                </View>
+                <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage} >
+
+                </ImageBackground>
+            </Modal>
         );
     }
 
@@ -75,23 +103,7 @@ class Chats extends Component {
             return (
                 <>
                     {this.ChatList(this.state.data)}
-                    <Modal
-                        animationType='slide'
-                        transparent={true}
-                        visible={this.state.toggleModal}
-                        onRequestClose={() => {this.setState({toggleModal: !this.state.toggleModal})}}
-                    >
-                        <View style={styles.chatDetailsScreenActionBar}>
-                            <TouchableNativeFeedback style={styles.chatDetailsScreenBackButtonView}>
-                                <View style={styles.chatDetailsScreenBackButton}>
-
-                                </View>
-                            </TouchableNativeFeedback>
-                        </View>
-                        <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage} >
-
-                        </ImageBackground>
-                    </Modal>
+                    {this.renderModal()}
                 </>
             );
         }
@@ -153,20 +165,25 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     chatDetailsScreenActionBar: {
-        height: 50,
+        height: 70,
         backgroundColor: '#006156',
-        justifyContent:'center'
+        justifyContent: 'center',
+        paddingHorizontal: 10
     },
     chatDetailsScreenBackButtonView: {
-        height: 40,
-        width: 20,
+        height: 55,
+        width: 70,
         borderRadius: 24
     },
     chatDetailsScreenBackButton: {
-        backgroundColor: 'pink',
-        height: 40,
-        width: 70,
-        borderRadius: 24
+        flexDirection: 'row',
+        alignItems: 'center',
+        height: "100%"
+    },
+    chatDetailsScreenBackButtonImage: {
+        height: 36,
+        width: 36,
+        borderRadius: 18
     },
 });
 
