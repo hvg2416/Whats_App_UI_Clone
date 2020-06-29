@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal, TouchableOpacity, KeyboardAvoidingView, TextInput, Dimensions, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
+import { ScrollView } from 'react-native-gesture-handler';
 
 
 const Stack = createStackNavigator();
@@ -99,14 +100,14 @@ class Chats extends Component {
                         </View>
                     </View>
                 </View>
-                <KeyboardAvoidingView behavior="height" style={styles.chatDetailsScreenKeyboardAvoidingView}>
+                <KeyboardAvoidingView behavior="height" style={styles.chatDetailsScreenKeyboardAvoidingView} keyboardVerticalOffset={10}>
                     <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage}>
-                        <View style={styles.chatDetailsScreenMessagesView}>
-                            <Text>Messages</Text>
-                        </View>
-                        <View style={{backgroundColor: 'grey', height: "20%", alignItems: 'center'}}>
-                            <TextInput style={styles.chatDetailsScreenTextInput} value={this.state.chat_message_input} onChange={(text) => { this.setState({ chat_message_input: text }) }} />
-                        </View>
+                            <View style={styles.chatDetailsScreenMessagesView}>
+                                <Text>Messages</Text>
+                            </View>
+                            <View style={{ backgroundColor: 'grey', height: "20%", alignItems: 'center', justifyContent: 'center' }}>
+                                <TextInput style={styles.chatDetailsScreenTextInput} value={this.state.chat_message_input} onChange={(text) => { this.setState({ chat_message_input: text }) }} />
+                            </View>
                     </ImageBackground>
                 </KeyboardAvoidingView>
             </Modal>
@@ -251,11 +252,11 @@ const styles = StyleSheet.create({
     chatDetailsScreenKeyboardAvoidingView: {
         marginBottom: Dimensions.get('screen').height - Dimensions.get('window').height,
     },
-    chatDetailsScreenMessagesView: { 
-        backgroundColor: 'pink', 
-        height: "80%", 
-        justifyContent: 'center', 
-        alignItems: 'center' 
+    chatDetailsScreenMessagesView: {
+        backgroundColor: 'pink',
+        height: "80%",
+        justifyContent: 'center',
+        alignItems: 'center'
     },
 });
 
