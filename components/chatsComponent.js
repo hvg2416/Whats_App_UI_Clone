@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal, TouchableOpacity } from 'react-native';
+import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal, TouchableOpacity, KeyboardAvoidingView, TextInput, Dimensions, StatusBar } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
@@ -15,6 +15,7 @@ class Chats extends Component {
             done: false,
             toggleModal: false,
             selectedChat: {},
+            chat_message_input: '',
         };
         this.ChatList = this.ChatList.bind(this);
         this.renderItem = this.renderItem.bind(this);
@@ -67,7 +68,7 @@ class Chats extends Component {
             >
                 <View style={styles.chatDetailsScreenActionBar}>
                     <View style={styles.chatDetailsScreenBackButtonView}>
-                        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', false)}>
+                        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#f2f2f2', true)} onPress={() => { this.setState({ toggleModal: !this.state.toggleModal }) }}>
                             <View style={styles.chatDetailsScreenBackButton}>
                                 <MaterialIcons name="arrow-back" size={30} color="white" />
                                 <Image source={{ uri: this.state.selectedChat.chat_thumbnail }} style={styles.chatDetailsScreenBackButtonImage} />
@@ -80,27 +81,34 @@ class Chats extends Component {
                             <Text style={styles.chatDetailsScreenHeaderSubTitle}> online </Text>
                         </View>
                         <View style={styles.chatDetailsScreenHeaderIconsView}>
-                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',true)}>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#f2f2f2', true)}>
                                 <View>
-                                <MaterialIcons name="videocam" size={26} color="white" />
+                                    <MaterialIcons name="videocam" size={26} color="white" />
                                 </View>
                             </TouchableNativeFeedback>
-                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',true)}>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#f2f2f2', true)}>
                                 <View>
-                                <MaterialIcons name="call" size={24} color="white" />
+                                    <MaterialIcons name="call" size={24} color="white" />
                                 </View>
                             </TouchableNativeFeedback>
-                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',false)}>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#f2f2f2', false)}>
                                 <View>
-                                <FontAwesome5 name="ellipsis-v" size={16} color="white" />
+                                    <FontAwesome5 name="ellipsis-v" size={16} color="white" />
                                 </View>
                             </TouchableNativeFeedback>
                         </View>
                     </View>
                 </View>
-                <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage} >
-
-                </ImageBackground>
+                <KeyboardAvoidingView behavior="height" style={styles.chatDetailsScreenKeyboardAvoidingView}>
+                    <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage}>
+                        <View style={styles.chatDetailsScreenMessagesView}>
+                            <Text>Messages</Text>
+                        </View>
+                        <View style={{backgroundColor: 'grey', height: "20%", alignItems: 'center'}}>
+                            <TextInput style={styles.chatDetailsScreenTextInput} value={this.state.chat_message_input} onChange={(text) => { this.setState({ chat_message_input: text }) }} />
+                        </View>
+                    </ImageBackground>
+                </KeyboardAvoidingView>
             </Modal>
         );
     }
@@ -185,7 +193,7 @@ const styles = StyleSheet.create({
     },
     chatDetailsScreenBackgroundImage: {
         height: "100%",
-        width: "100%"
+        width: "100%",
     },
     chatDetailsScreenActionBar: {
         height: 55,
@@ -196,7 +204,8 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 55,
         width: 70,
-        borderRadius: 24
+        borderRadius: 24,
+        justifyContent: 'center'
     },
     chatDetailsScreenBackButton: {
         flexDirection: 'row',
@@ -231,6 +240,22 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         width: 124,
         marginRight: 10
+    },
+    chatDetailsScreenTextInput: {
+        width: "95%",
+        borderColor: 'white',
+        borderWidth: 1,
+        borderRadius: 20,
+        height: "34%"
+    },
+    chatDetailsScreenKeyboardAvoidingView: {
+        marginBottom: Dimensions.get('screen').height - Dimensions.get('window').height,
+    },
+    chatDetailsScreenMessagesView: { 
+        backgroundColor: 'pink', 
+        height: "80%", 
+        justifyContent: 'center', 
+        alignItems: 'center' 
     },
 });
 
