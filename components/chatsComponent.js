@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, FlatList, View, StyleSheet, Image, TouchableNativeFeedback, ImageBackground, Modal, TouchableOpacity } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
-import { MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons, FontAwesome5 } from '@expo/vector-icons';
 
 
 const Stack = createStackNavigator();
@@ -67,12 +67,35 @@ class Chats extends Component {
             >
                 <View style={styles.chatDetailsScreenActionBar}>
                     <View style={styles.chatDetailsScreenBackButtonView}>
-                        <TouchableNativeFeedback>
+                        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white', false)}>
                             <View style={styles.chatDetailsScreenBackButton}>
                                 <MaterialIcons name="arrow-back" size={30} color="white" />
                                 <Image source={{ uri: this.state.selectedChat.chat_thumbnail }} style={styles.chatDetailsScreenBackButtonImage} />
                             </View>
                         </TouchableNativeFeedback>
+                    </View>
+                    <View style={styles.chatDetailsScreenHeader}>
+                        <View>
+                            <Text style={styles.chatDetailsScreenHeaderTitle}> {this.state.selectedChat.chat_name} </Text>
+                            <Text style={styles.chatDetailsScreenHeaderSubTitle}> online </Text>
+                        </View>
+                        <View style={styles.chatDetailsScreenHeaderIconsView}>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',true)}>
+                                <View>
+                                <MaterialIcons name="videocam" size={26} color="white" />
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',true)}>
+                                <View>
+                                <MaterialIcons name="call" size={24} color="white" />
+                                </View>
+                            </TouchableNativeFeedback>
+                            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('white',false)}>
+                                <View>
+                                <FontAwesome5 name="ellipsis-v" size={16} color="white" />
+                                </View>
+                            </TouchableNativeFeedback>
+                        </View>
                     </View>
                 </View>
                 <ImageBackground source={{ uri: 'https://i.redd.it/qwd83nc4xxf41.jpg' }} style={styles.chatDetailsScreenBackgroundImage} >
@@ -165,12 +188,12 @@ const styles = StyleSheet.create({
         width: "100%"
     },
     chatDetailsScreenActionBar: {
-        height: 70,
+        height: 55,
         backgroundColor: '#006156',
-        justifyContent: 'center',
-        paddingHorizontal: 10
+        flexDirection: 'row'
     },
     chatDetailsScreenBackButtonView: {
+        flex: 1,
         height: 55,
         width: 70,
         borderRadius: 24
@@ -184,6 +207,30 @@ const styles = StyleSheet.create({
         height: 36,
         width: 36,
         borderRadius: 18
+    },
+    chatDetailsScreenHeader: {
+        flex: 4,
+        flexDirection: 'row',
+        marginLeft: 5,
+        alignItems: 'center',
+        width: "100%",
+        justifyContent: 'space-between',
+    },
+    chatDetailsScreenHeaderTitle: {
+        fontSize: 20,
+        fontWeight: "bold",
+        color: 'white'
+    },
+    chatDetailsScreenHeaderSubTitle: {
+        fontSize: 12,
+        color: 'white',
+    },
+    chatDetailsScreenHeaderIconsView: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        width: 124,
+        marginRight: 10
     },
 });
 
