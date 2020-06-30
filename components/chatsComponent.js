@@ -155,6 +155,9 @@ class Chats extends Component {
                 <>
                     {this.ChatList(this.state.data)}
                     {this.renderModal()}
+                    <TouchableOpacity style={styles.chatsScreenFAB}>
+                        <MaterialIcons name="chat" size={24} color="white" />
+                    </TouchableOpacity>
                 </>
             );
         }
@@ -297,6 +300,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 9,
         marginLeft: 10
+    },
+    chatsScreenFAB: {
+        height: 60,
+        width: 60,
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        backgroundColor: '#02c953',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 30
     },
 });
 
