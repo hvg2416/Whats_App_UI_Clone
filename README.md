@@ -4,4 +4,4 @@
 
 ## Description
 
-This is just a clone of renowned social messaging application named **WhatsApp**. This project was done completely using *React Native* in a *Expo* managed workflow.
+This is just a User Interface(UI) clone of renowned social messaging application named **WhatsApp**. This project was done completely using *React Native* in a *Expo* managed workflow.
